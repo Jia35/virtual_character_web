@@ -1,0 +1,117 @@
+<div id="app">
+  <div class="dropdown my-3">
+    <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+      篩選性別
+    </button>
+    <ul class="dropdown-menu">
+      <li><a class="dropdown-item" @click="filterGender('')">全部</a></li>
+      <li><a class="dropdown-item" @click="filterGender('女')">女生</a></li>
+      <li><a class="dropdown-item" @click="filterGender('男')">男生</a></li>
+    </ul>
+  </div>
+
+  <template v-if="filterCharacters.length > 0">
+    
+    <div class="row justify-content-between">
+      <div class="col-md-4 col-lg-3">
+        <p>共有 [[ filterCharacters.length ]] 位角色</p>
+      </div>
+
+      <div class="col-md-7 col-lg-5 text-end">
+        <div class="row">
+          <div class="col-5 col-md-6 col-xl-7 pe-0">
+            <span>
+              一頁顯示
+              <select v-model.number="offset">
+                <option>10</option>
+                <option selected="selected">20</option>
+                <option>30</option>
+                <option>50</option>
+              </select>
+              筆
+            </span>
+          </div>
+          <div class="col-7 col-md-6 col-xl-5 ps-0">
+            <button @click="prevOrNext(-1)" class="btn btn-primary btn-sm"><i class="fas fa-angle-left"></i></button>
+            第 [[ currentPage ]] 頁 (共 [[ pageTotalNum ]] 頁)
+            <button @click="prevOrNext(1)" class="btn btn-primary btn-sm"><i class="fas fa-angle-right"></i></button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+
+    <div class="table-responsive my-1">
+      <table class="table table-hover text-nowrap">
+        <thead>
+          <tr class="table-dark">
+            <th scope="col">生日</th>
+            <th scope="col">名稱</th>
+            <th scope="col">原名稱</th>
+            <th scope="col">作品</th>
+            <th scope="col">參考</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr v-for="(character, index) in filterCharacters.slice(pageStartIndex, pageStartIndex + offset)" :key="character.name">
+            <td v-if="character.birthday_note" :title="character.birthday_note">[[ character.birthday_date ]]</td>
+            <td v-else :title="character.birthday_date">[[ character.birthday_date ]]</td>
+            <td>
+              <template>
+                <i v-if="character.gender === '男'" class="fas fa-male" style="color: #4c81e4;"></i>
+                <i v-else-if="character.gender === '女'" class="fas fa-female" style="color: #e44caa;"></i>
+                <i v-else></i>
+              </template>
+              [[ character.name ]]
+            </td>
+            <td>[[ character.name_original ]]</td>
+            <td><a :href="character.media.url">[[ character.media.name ]]</a></td>
+            <td>
+              <a :href="character.url" target="_blank">
+                <i class="fas fa-external-link-alt" style="color: #949494;"></i>
+              </a>
+            </td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+
+
+    <div class="row justify-content-between">
+      <div class="col-md-4 col-lg-3">
+      </div>
+
+      <div class="col-md-7 col-lg-5 text-end">
+        <div class="row">
+          <div class="col-5 col-md-6 col-xl-7 pe-0">
+            <span>
+              一頁顯示
+              <select v-model.number="offset">
+                <option>10</option>
+                <option selected="selected">20</option>
+                <option>30</option>
+                <option>50</option>
+              </select>
+              筆
+            </span>
+          </div>
+          <div class="col-7 col-md-6 col-xl-5 ps-0">
+            <button @click="prevOrNext(-1)" class="btn btn-primary btn-sm"><i class="fas fa-angle-left"></i></button>
+            第 [[ currentPage ]] 頁 (共 [[ pageTotalNum ]] 頁)
+            <button @click="prevOrNext(1)" class="btn btn-primary btn-sm"><i class="fas fa-angle-right"></i></button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </template>
+
+  <template v-else>
+    <p>{{ no_character_msg|default:"沒有符合此篩選結果的角色😯，試試看改變篩選條件" }}</p>
+  </template>
+
+</div>

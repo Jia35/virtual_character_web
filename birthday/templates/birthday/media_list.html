@@ -1,0 +1,89 @@
+{% extends 'birthday/base.html' %}
+
+{% block title %}作品分類 | {{ block.super }}{% endblock title %}
+
+
+{% block main %}
+<div id="app">
+
+  <h3>依照作品分類</h3>
+
+  <div class="mb-5">
+    <p>已收錄 [[ page_info.count ]] 筆作品</p>
+
+    <nav>
+      <ul class="pagination justify-content-center">
+        <!-- <li class="page-item"><a class="page-link" href="">上一頁</a></li> -->
+        <template v-for="page in page_info.page_range" >
+          <li v-if="page.name === page_info.page" class="page-item active">
+            <span class="page-link">[[ page.name ]] <span class="sr-only">(current)</span></span>
+          </li>
+          <li v-else-if="page.name ===  '...'" class="page-item"><span class="page-link">[[ page.name ]]</span></li>
+          <li v-else class="page-item"><a class="page-link" :href="page.url">[[ page.name ]]</a></li>
+        </template>
+        <!-- <li class="page-item"><a class="page-link" href="">下一頁</a></li> -->
+      </ul>
+    </nav>
+
+    <div class="table-responsive">
+      <table class="table table-hover text-nowrap">
+        <thead>
+          <tr class="table-dark">
+            <th scope="col">名稱</th>
+            <th scope="col">角色數量</th>
+            <th scope="col">國家</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr v-for="(medium, index) in media" :key="medium.id">
+            <td><a :href="'{% url 'media' %}?id=' + medium.id">[[ medium.name ]]</a></td>
+            <td>[[ medium.count ]]</td>
+            <td>[[ medium.country ]]</td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <nav>
+      <ul class="pagination justify-content-center">
+        <!-- <li class="page-item"><a class="page-link" href="">上一頁</a></li> -->
+        <template v-for="page in page_info.page_range" >
+          <li v-if="page.name === page_info.page" class="page-item active">
+            <span class="page-link">[[ page.name ]] <span class="sr-only">(current)</span></span>
+          </li>
+          <li v-else-if="page.name ===  '...'" class="page-item"><span class="page-link">[[ page.name ]]</span></li>
+          <li v-else class="page-item"><a class="page-link" :href="page.url">[[ page.name ]]</a></li>
+        </template>
+        <!-- <li class="page-item"><a class="page-link" href="">下一頁</a></li> -->
+      </ul>
+    </nav>
+
+
+  </div>
+
+</div>
+{% endblock main %}
+
+
+{% block script %}
+<script>
+  new Vue({
+    delimiters: ["[[", "]]"],
+    el: '#app',
+    data: {
+      media: JSON.parse("{{ media|escapejs }}"),
+      page_info: JSON.parse("{{ page_info|escapejs }}"),
+    },
+    // computed: {
+    // },
+    // methods: {
+    // },
+    // watch: {
+    // }
+
+  });
+
+</script>
+{% endblock script %}

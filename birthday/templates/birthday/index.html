@@ -1,0 +1,164 @@
+{% extends 'birthday/base.html' %}
+
+
+{% block main %}
+<div id="app">
+
+  <div class="mb-2">
+    <small>目前已有 1093 位角色、84 部作品。</small>
+  </div>
+
+  <div>
+    <a :href="'{% url 'index' %}?m=' + (new Date().getMonth() + 1) + '&d=' + new Date().getDate()"
+      style="text-decoration: none">
+      <div class="alert alert-info" role="alert" style="background-color: #d0ffff;">
+        <p class="m-0">今天 [[ today ]] 是誰的生日？</p>
+        <small class="m-0">Today's Birthday Character</small>
+      </div>
+    </a>
+  </div>
+
+  <div class="mb-5">
+    <form class="row" method="get" action="{% url 'search' %}">
+      <div class="col-auto">
+        <input type="text" class="form-control" name="keyword" placeholder="輸入名稱關鍵字...">
+      </div>
+      <div class="col-auto">
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-search"></i>
+          搜尋
+        </button>
+      </div>
+      <small class="text-muted">(只搜尋"角色名稱"與"作品名稱")</small>
+    </form>
+  </div>
+
+  <div class="mb-5">
+    <h3>依照月份分類</h3>
+
+    <div class="row justify-content-center">
+      <div class="col-8">
+        <div class="row row-cols-3 row-cols-sm-4 row-cols-md-6 g-1">
+
+          <div class="col" v-for="(month, count) in monthData" :key="month.name">
+            <div class="card h-100 text-center" style="background-color: #ffd2e3;">
+              <a :href="'{% url 'index' %}?m=' + month.id" style="text-decoration: none">
+                <div class="card-body p-1">
+                  <p class="card-title m-0">[[ month.name ]]</p>
+                  <small class="card-text text-muted">[[ month.characterNum ]] 名</small>
+                </div>
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <hr>
+
+  <div class="mb-5">
+    <h3>指定日期</h3>
+
+    <div class="row justify-content-start">
+      <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
+        <input id="date" type="date" v-model="inputData">
+      </div>
+      <div class="col-4 col-sm-3 col-lg-3 col-xl-3">
+        <button type="button" class="btn btn-success" @click="searchDate()">查詢</button>
+      </div>
+    </div>
+    <small>(不看年份，只針對月份與日期)</small>
+
+    
+  </div>
+  <hr>
+
+  <div class="mb-5">
+    <h3>依照作品分類</h3>
+
+    <div class="mb-2">
+      <p class="mb-0">已收錄 {{ media_count }} 筆作品</p>
+      <small>(以下顯示前 10 名，<a href="{% url 'media_list' 1 %}">查看全部作品</a>)</small>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-hover text-nowrap">
+        <thead>
+          <tr class="table-dark">
+            <th scope="col">名稱</th>
+            <th scope="col">角色數量</th>
+            <th scope="col">國家</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr v-for="medium in media" :key="medium.media__id">
+            <td><a :href="'{% url 'media' %}?id=' + medium.media__id">[[ medium.media__name ]]</a></td>
+            <td>[[ medium.total ]]</td>
+            <td>[[ medium.media__country ]]</td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+
+</div>
+{% endblock main %}
+
+
+{% block script %}
+<script>
+  new Vue({
+    delimiters: ["[[", "]]"],
+    el: '#app',
+    data: {
+      birthdayMonth: JSON.parse("{{ birthday_month|escapejs }}"),
+      media: JSON.parse("{{ media|escapejs }}"),
+
+      inputData: '',
+    },
+    computed: {
+      today: function () {
+        var date = new Date();
+        var date = (date.getMonth() + 1) + '月' + date.getDate() + '日';
+        return date
+      },
+      monthData: function () {
+        month_data = [
+          { 'id': 1, 'name': '一月', 'characterNum': 0 },
+          { 'id': 2, 'name': '二月', 'characterNum': 0 },
+          { 'id': 3, 'name': '三月', 'characterNum': 0 },
+          { 'id': 4, 'name': '四月', 'characterNum': 0 },
+          { 'id': 5, 'name': '五月', 'characterNum': 0 },
+          { 'id': 6, 'name': '六月', 'characterNum': 0 },
+          { 'id': 7, 'name': '七月', 'characterNum': 0 },
+          { 'id': 8, 'name': '八月', 'characterNum': 0 },
+          { 'id': 9, 'name': '九月', 'characterNum': 0 },
+          { 'id': 10, 'name': '十月', 'characterNum': 0 },
+          { 'id': 11, 'name': '十一月', 'characterNum': 0 },
+          { 'id': 12, 'name': '十二月', 'characterNum': 0 },
+        ]
+        this.birthdayMonth.forEach((item, index, arr) => {
+          find_index = month_data.findIndex(x => x.id === item['month']);
+          month_data[find_index]['characterNum'] = item['total'];
+        });
+        return month_data
+      },
+    },
+    methods: {
+      searchDate: function () {
+        window.location.href = "/?m=" + this.inputData.slice(5, 7) + "&d=" + this.inputData.slice(8, 10);
+      },
+    },
+    watch: {
+    }
+
+  });
+
+</script>
+{% endblock script %}

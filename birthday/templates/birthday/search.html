@@ -1,0 +1,100 @@
+{% extends 'birthday/base.html' %}
+
+{% block main %}
+<div id="app">
+  <h3 class="my-4">搜尋結果</h3>
+
+  <form class="row" method="get" action="{% url 'search' %}">
+    <div class="col-auto">
+      <input type="text" class="form-control" name="keyword" v-model="keyword" placeholder="輸入名稱關鍵字...">
+    </div>
+    <div class="col-auto">
+      <button type="submit" class="btn btn-primary">
+        <i class="fas fa-search"></i>
+        搜尋
+      </button>
+    </div>
+    <small class="text-muted my-2">(只會搜尋"角色名稱"與"作品名稱"，目前僅支援中文)</small>
+  </form>
+
+  <hr>
+  <template v-if="characters.length > 0">
+    <div class="mb-3">
+      <p class="mb-0">搜尋到 [[ characters.length ]] 筆相關資料</p>
+      <small class="text-muted">(最多只顯示前 50 筆資料，避免造成伺服器負擔)</small>
+    </div>
+
+    <table class="table">
+      <thead>
+        <tr class="table-dark">
+          <th scope="col">生日</th>
+          <th scope="col">名稱</th>
+          <th scope="col">原名稱</th>
+          <th scope="col">作品</th>
+          <th scope="col">參考</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <tr v-for="character in characters" :key="character.name">
+          <td v-if="character.birthday_note" :title="character.birthday_note">[[ character.birthday_date ]]</td>
+          <td v-else :title="character.birthday_date">[[ character.birthday_date ]]</td>
+          <td>
+            <template>
+              <i v-if="character.gender === '男'" class="fas fa-male" style="color: #4c81e4;"></i>
+              <i v-else-if="character.gender === '女'" class="fas fa-female" style="color: #e44caa;"></i>
+              <i v-else></i>
+            </template>
+            [[ character.name ]]
+          </td>
+          <td>[[ character.name_original ]]</td>
+          <td><a :href="character.media.url">[[ character.media.name ]]</a></td>
+          <td>
+            <a :href="character.url" target="_blank">
+              <i class="fas fa-external-link-alt" style="color: #949494;"></i>
+            </a>
+          </td>
+        </tr>
+        
+          
+      </tbody>
+    </table>
+  </template>
+
+  <template v-else-if="message.length > 0">
+    <div class="alert alert-warning" role="alert">
+      [[ message ]]
+    </div>
+  </template>
+
+  <template v-else>
+    <div class="alert alert-warning" role="alert">
+      找不到符合的角色，換個關鍵字試試...
+    </div>
+  </template>
+
+
+</div>
+{% endblock main %}
+
+
+{% block script %}
+<script>
+  new Vue({
+    delimiters: ["[[", "]]"],
+    el: '#app',
+    data: {
+      characters: JSON.parse("{{ characters|escapejs }}"),
+      message: "{{ message }}",
+    },
+    computed: {
+      keyword: function () {
+        var url = new URL(window.location.href);
+        var param = url.searchParams.get("keyword").trim();
+        return param
+      },
+    },
+  });
+
+</script>
+{% endblock script %}

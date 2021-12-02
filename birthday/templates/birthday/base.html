@@ -1,0 +1,103 @@
+{% load static %}
+
+<!doctype html>
+<html lang="zh-Hant-TW">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="X-UA-Compatible" content="IE=edge">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <!-- <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.min.js"></script> -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js" integrity="sha512-Tn2m0TIpgVyTzzvmxLNuqbSJH3JP8jm+Cy3hvHrW7ndTDcJ1w5mBiksqDBb8GpE2ksktFvDB/ykZ0mDpsZj20w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.14/vue.js"></script>
+    
+    <title>{% block title %}角色生日空間{% endblock title %}</title>
+    <meta name="description"  content="收錄所有虛擬角色的生日，看看你和誰同一天生日。" />
+    <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}"/>
+
+    <style></style>
+    {% block head %}
+    {% endblock head %}
+  </head>
+  <body>
+    <div id="app">
+      <!-- <nav class="navbar navbar-expand-md navbar-dark bg-primary"> -->
+      <nav class="navbar navbar-expand-md navbar-dark" style="background-color: #6699CC;">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="{% url 'index' %}">角色生日空間 <span class="badge bg-secondary">beta</span></a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'index' %}">首頁</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                  月份
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="{% url 'index' %}?m=1">一月</a></li>
+                  <li><a class="dropdown-item" href="{% url 'index' %}?m=2">二月</a></li>
+                  <li><a class="dropdown-item" href="{% url 'index' %}?m=3">三月</a></li>
+                  <li><a class="dropdown-item" href="{% url 'index' %}?m=4">四月</a></li>
+                  <li><a class="dropdown-item" href="{% url 'index' %}?m=5">五月</a></li>
+                  <li><a class="dropdown-item" href="{% url 'index' %}?m=6">六月</a></li>
+                  <li><a class="dropdown-item" href="{% url 'index' %}?m=7">七月</a></li>
+                  <li><a class="dropdown-item" href="{% url 'index' %}?m=8">八月</a></li>
+                  <li><a class="dropdown-item" href="{% url 'index' %}?m=9">九月</a></li>
+                  <li><a class="dropdown-item" href="{% url 'index' %}?m=10">十月</a></li>
+                  <li><a class="dropdown-item" href="{% url 'index' %}?m=11">十一月</a></li>
+                  <li><a class="dropdown-item" href="{% url 'index' %}?m=12">十二月</a></li>
+                </ul>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'media_list' 1 %}">作品</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'updates' 1 %}">更新資訊</a>
+              </li>
+            </ul>
+
+            <span class="navbar-text">
+              <a href="https://forms.gle/kae6wVnKQErSGt4u9"
+                target="_blank"
+                style="text-decoration:none; color:rgba(255,255,255,.55); font-size: 14px;">
+                建議與回報
+              </a>
+            </span>
+
+            <form class="d-flex ms-3" method="get" action="{% url 'search' %}">
+              <input class="form-control me-2 w-75" type="text" name="keyword" placeholder="輸入名稱關鍵字...">
+              <button class="btn btn-outline-light" type="submit">搜尋</button>
+            </form>
+
+          </div>
+        </div>
+      </nav>
+
+      <div class="container mt-3 mb-5">
+        {% block main %}
+        {% endblock main %}
+      </div>
+
+      <!-- 頁腳 -->
+      <div style="background-color: #eeeeee;" class="py-1">
+        <div class="mx-3">
+          <small style="font-size: 8px;">收錄所有虛擬角色的生日，看看你和誰同一天生日。</small>
+        </div>
+      </div>
+
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+    {% block script %}
+    {% endblock script %}
+  </body>
+</html>

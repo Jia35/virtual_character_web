@@ -1,0 +1,91 @@
+{% extends 'birthday/base.html' %}
+
+{% block title %}更新資訊 | {{ block.super }}{% endblock title %}
+
+{% block main %}
+<div id="app">
+
+  <div class="mb-2">
+    <h3>更新資訊 What's New</h3>
+  </div>
+
+  <hr>
+
+  <nav v-if="page_info.num_pages > 1">
+    <ul class="pagination justify-content-center">
+      <!-- <li class="page-item"><a class="page-link" href="">上一頁</a></li> -->
+      <template v-for="page in page_info.page_range" >
+        <li v-if="page.name === page_info.page" class="page-item active">
+          <span class="page-link">[[ page.name ]] <span class="sr-only">(current)</span></span>
+        </li>
+        <li v-else-if="page.name ===  '...'" class="page-item"><span class="page-link">[[ page.name ]]</span></li>
+        <li v-else class="page-item"><a class="page-link" :href="page.url">[[ page.name ]]</a></li>
+      </template>
+      <!-- <li class="page-item"><a class="page-link" href="">下一頁</a></li> -->
+    </ul>
+  </nav>
+
+  <div class="row row-cols-1 g-1 justify-content-center my-3">
+    
+    <div v-for="(update, index) in updates" :key="update.date" class="col-9">
+      <div class="card h-100"
+        :class="{'border-success': update.type == '新功能', 'border-warning': update.type == '修正', 'border-info': update.type == '增加'}">
+        <div class="card-body">
+          <span class="card-title badge"
+            :class="{'bg-success': update.type == '新功能', 'bg-warning text-dark': update.type == '修正', 'bg-info text-dark': update.type == '增加'}">
+            [[ update.type ]]
+          </span>
+          <small class="card-subtitle mb-2 text-muted">
+            [[ update.date ]]
+          </small>
+          <p class="card-text">[[ update.text ]]</p>
+          <template v-if="update.media_id">
+            <div style="font-size: 14px;">
+              <a class="btn btn-outline-primary btn-sm" :href="'/media/?id=' + update.media_id" role="button">
+                [[ update.media_name ]]
+              </a>
+              [[ update.character ]]
+            </div>
+          </template>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <nav v-if="page_info.num_pages > 1">
+    <ul class="pagination justify-content-center">
+      <!-- <li class="page-item"><a class="page-link" href="">上一頁</a></li> -->
+      <template v-for="page in page_info.page_range" >
+        <li v-if="page.name === page_info.page" class="page-item active">
+          <span class="page-link">[[ page.name ]] <span class="sr-only">(current)</span></span>
+        </li>
+        <li v-else-if="page.name ===  '...'" class="page-item"><span class="page-link">[[ page.name ]]</span></li>
+        <li v-else class="page-item"><a class="page-link" :href="page.url">[[ page.name ]]</a></li>
+      </template>
+      <!-- <li class="page-item"><a class="page-link" href="">下一頁</a></li> -->
+    </ul>
+  </nav>
+
+
+</div>
+{% endblock main %}
+
+
+{% block script %}
+<script>
+  new Vue({
+    delimiters: ["[[", "]]"],
+    el: '#app',
+    data: {
+      updates: JSON.parse("{{ updates|escapejs }}"),
+      page_info: JSON.parse("{{ page_info|escapejs }}"),
+    },
+    methods: {
+      searchDate: function () {
+        window.location.href = "/birthday?m=" + this.inputData.slice(5, 7) + "&d=" + this.inputData.slice(8, 10);
+      },
+    },
+  });
+</script>
+{% endblock script %}

@@ -1,0 +1,75 @@
+{% extends 'birthday/base.html' %}
+
+{% block title %}{{ birthday_str }} | {{ block.super }}{% endblock title %}
+
+
+{% block main %}
+
+<h2>{{ birthday_str }} 生日的角色有誰？</h2>
+<p>已收錄 [[ characters.length ]] 位角色</p>
+
+<hr>
+
+{% include 'birthday/list_character_block.html' with no_character_msg="今天沒人生日呀😯，或沒有符合此篩選結果的角色..." %}
+
+{% endblock main %}
+
+
+{% block script %}
+
+<script>
+  new Vue({
+    delimiters: ["[[", "]]"],
+    el: '#app',
+    data: {
+      characters: JSON.parse("{{ characters|escapejs }}"),
+      filterCharacters: JSON.parse("{{ characters|escapejs }}"),
+
+      offset: 30,  // 每頁顯示幾筆
+      currentPage: 1,  // 目前頁數
+    },
+    computed: {
+      // 總頁數
+      pageTotalNum: function () {
+        return Math.ceil(this.filterCharacters.length / this.offset)
+      },
+      pageStartIndex: function () {
+        return (this.currentPage - 1) * this.offset;
+      },
+    },
+    methods: {
+      // 篩選性別
+      filterGender: function (gender) {
+        if (gender === '') {
+          this.filterCharacters = this.characters
+        } else {
+          this.filterCharacters = this.characters.filter(e => e.gender === gender)
+        }
+      },
+      // 下一頁或上一頁
+      prevOrNext: function (n) {
+        this.currentPage += n
+
+        if (this.currentPage < 1) {
+          this.currentPage = 1;
+        } else if (this.currentPage > this.pageTotalNum) {
+          this.currentPage = this.pageTotalNum;
+        }
+      },
+    },
+    watch: {
+      // 避免篩選後，目前頁數大於最大頁數
+      pageTotalNum: function (newValue, oldValue) {
+        if (this.currentPage == 0) {
+          this.currentPage = 1;
+        }
+        else if (this.currentPage > newValue) {
+          this.currentPage = newValue;
+        }
+      }
+    }
+
+  });
+</script>
+
+{% endblock script %}
