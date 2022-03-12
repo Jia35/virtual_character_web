@@ -5,7 +5,7 @@
 <div id="app">
 
   <div class="mb-2">
-    <small>目前已有 1093 位角色、84 部作品。</small>
+    <small>目前已有 {{ character_count }} 位角色、{{ media_count }} 部作品。</small>
   </div>
 
   <div>
@@ -80,7 +80,7 @@
 
     <div class="mb-2">
       <p class="mb-0">已收錄 {{ media_count }} 筆作品</p>
-      <small>(以下顯示前 10 名，<a href="{% url 'media_list' 1 %}">查看全部作品</a>)</small>
+      <small>(以下顯示收錄角色數量前 10 名，<a href="{% url 'media_list' 1 %}">查看全部作品</a>)</small>
     </div>
 
     <div class="table-responsive">

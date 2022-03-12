@@ -62,7 +62,13 @@ def index(request):
                       .order_by('-total')[:10]
                       ]
         media_count = Media.objects.all().count
-        context = {'birthday_month': json.dumps(birthday_month), 'media': json.dumps(media_list), 'media_count': media_count}
+        character_count = Character.objects.all().count
+        context = {
+            'birthday_month': json.dumps(birthday_month),
+            'media': json.dumps(media_list),
+            'media_count': media_count,
+            'character_count': character_count
+        }
         return render(request, 'birthday/index.html', context)
 
 
@@ -84,10 +90,13 @@ def media(request):
 
 def media_list(request, page):
     media = Media.objects.all().order_by('id')
+    media_number = media.count()
     paginator = Paginator(media, 20)
-    # 避免頁數大於總頁數
+    # 避免頁數大於總頁數，小於1
     if page > paginator.num_pages:
         page = paginator.num_pages
+    elif page < 1:
+        page = 1
     page_range = paginator.get_elided_page_range(page)
     media_ = paginator.get_page(page)
 
@@ -116,12 +125,22 @@ def media_list(request, page):
         })
 
     # print(page_info)
-    context = {'media': json.dumps(media_list), 'page_info': json.dumps(page_info)}
+    context = {
+        'media': json.dumps(media_list),
+        'media_number': json.dumps(media_number),
+        'page_info': json.dumps(page_info),
+    }
     return render(request, 'birthday/media_list.html', context)
 
 
 def updates(request, page):
-    updates = Update.objects.all().order_by('-date')
+    # 篩選不同類別：新功能、增加、修正
+    filter_type = request.GET.get('filter', '')
+    if (filter_type == '新功能') or (filter_type == '增加') or (filter_type == '修正'):
+        updates = Update.objects.filter(type=filter_type).order_by('-date')
+    else:
+        updates = Update.objects.all().order_by('-date')
+
     paginator = Paginator(updates, 20)
     # 避免頁數大於總頁數
     if page > paginator.num_pages:

@@ -32,9 +32,9 @@
             </span>
           </div>
           <div class="col-7 col-md-6 col-xl-5 ps-0">
-            <button @click="prevOrNext(-1)" class="btn btn-primary btn-sm"><i class="fas fa-angle-left"></i></button>
+            <button @click="prevOrNext(-1)" class="btn btn-sm" :class="prevClassObject"><i class="fas fa-angle-left"></i></button>
             第 [[ currentPage ]] 頁 (共 [[ pageTotalNum ]] 頁)
-            <button @click="prevOrNext(1)" class="btn btn-primary btn-sm"><i class="fas fa-angle-right"></i></button>
+            <button @click="prevOrNext(1)" class="btn btn-sm" :class="nextClassObject"><i class="fas fa-angle-right"></i></button>
           </div>
         </div>
       </div>
@@ -99,9 +99,9 @@
             </span>
           </div>
           <div class="col-7 col-md-6 col-xl-5 ps-0">
-            <button @click="prevOrNext(-1)" class="btn btn-primary btn-sm"><i class="fas fa-angle-left"></i></button>
+            <button @click="prevOrNext(-1)" class="btn btn-sm" :class="prevClassObject"><i class="fas fa-angle-left"></i></button>
             第 [[ currentPage ]] 頁 (共 [[ pageTotalNum ]] 頁)
-            <button @click="prevOrNext(1)" class="btn btn-primary btn-sm"><i class="fas fa-angle-right"></i></button>
+            <button @click="prevOrNext(1)" class="btn btn-sm" :class="nextClassObject"><i class="fas fa-angle-right"></i></button>
           </div>
         </div>
       </div>

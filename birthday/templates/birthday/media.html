@@ -37,6 +37,20 @@
       pageStartIndex: function () {
         return (this.currentPage - 1) * this.offset;
       },
+      // 上一頁 Class
+      prevClassObject() {
+        return {
+          'btn-secondary': this.currentPage == 1,
+          'btn-primary': this.currentPage > 1
+        }
+      },
+      // 下一頁 Class
+      nextClassObject() {
+        return {
+          'btn-secondary': this.currentPage == this.pageTotalNum,
+          'btn-primary': this.currentPage < this.pageTotalNum
+        }
+      },
     },
     methods: {
       // 篩選性別
