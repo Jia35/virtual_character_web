@@ -2,14 +2,47 @@
 
 {% block title %}更新資訊 | {{ block.super }}{% endblock title %}
 
+{% block head %}
+<style>
+  /* .pagination.type .page-item .page-link {
+    color: #fd0d0d !important;
+    border-color: #a50000 !important;
+  }
+  .pagination.type .page-item.active .page-link {
+    color: #fff !important;
+    background: #ff0000 !important;
+    border-color: #a50000 !important;
+  } */
+</style>
+{% endblock head %}
+
+
 {% block main %}
 <div id="app">
 
   <div class="mb-2">
-    <h3>更新資訊 What's New</h3>
+    <h2>更新資訊 What's New</h2>
   </div>
 
   <hr>
+
+  <nav aria-label="Page navigation example">
+    <ul class="pagination type">
+      <li class="page-item" :class="{active: urlParam === '全部'}">
+        <a class="page-link" href="{% url 'updates' 1 %}?filter=全部">全部</a>
+      </li>
+      <li class="page-item" :class="{active: urlParam === '新功能'}">
+        <a class="page-link" href="{% url 'updates' 1 %}?filter=新功能">新功能</a>
+      </li>
+      <li class="page-item" :class="{active: urlParam === '增加'}">
+        <a class="page-link" href="{% url 'updates' 1 %}?filter=增加">增加</a>
+      </li>
+      <li class="page-item" :class="{active: urlParam === '修正'}">
+        <a class="page-link" href="{% url 'updates' 1 %}?filter=修正">修正</a>
+      </li>
+    </ul>
+  </nav>
+
 
   <nav v-if="page_info.num_pages > 1">
     <ul class="pagination justify-content-center">
@@ -44,7 +77,7 @@
               <a class="btn btn-outline-primary btn-sm" :href="'/media/?id=' + update.media_id" role="button">
                 [[ update.media_name ]]
               </a>
-              [[ update.character ]]
+              <span class="ms-2">[[ update.character ]]</span>
             </div>
           </template>
         </div>
@@ -67,7 +100,6 @@
     </ul>
   </nav>
 
-
 </div>
 {% endblock main %}
 
@@ -80,12 +112,52 @@
     data: {
       updates: JSON.parse("{{ updates|escapejs }}"),
       page_info: JSON.parse("{{ page_info|escapejs }}"),
+
+      // updateType: '全部',  // 篩選類別
+      // options: ['全部', '新功能', '增加', '修正'],
     },
-    methods: {
-      searchDate: function () {
-        window.location.href = "/birthday?m=" + this.inputData.slice(5, 7) + "&d=" + this.inputData.slice(8, 10);
+
+    computed: {
+      urlParam: function () {
+        var url = new URL(window.location.href);
+        var param = (url.searchParams.get("filter") || '全部').trim();
+        return param
       },
+
+      // updateType: function () {
+      //   var url = new URL(window.location.href);
+      //   var param = url.searchParams.get("filter") || '全部';
+      //   console.log(param)
+      //   var param1 = param.trim();
+      //   // console.log(param1)
+      //   // return '全部'
+      //   return param1
+      // },
+
+      // updateType:
+      // {
+      //   get()
+      //   {
+      //       var url = new URL(window.location.href);
+      //       var param = (url.searchParams.get("filter") || '全部').trim();
+      //       return param
+      //       // return this.updateType_
+      //   },
+      //   set(value)
+      //   {
+      //       this.updateType_ = value
+      //   }
+      // },
     },
+
+
+    // watch: {
+    //   // 篩選更新類別
+    //   updateType: function (newValue, oldValue) {
+    //     window.location.href = "{% url 'updates' 1 %}?filter=" + this.updateType;
+    //   },
+    // },
+
   });
 </script>
 {% endblock script %}

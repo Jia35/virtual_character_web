@@ -11,9 +11,12 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 import os
+import socket
 import configparser
 from pathlib import Path
 
+
+ENV_NAME = socket.gethostname()
 
 if os.path.isfile('env.ini'):
     config = configparser.ConfigParser()
@@ -74,6 +77,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'virtual_character_web.contexts.lang',
             ],
         },
     },
